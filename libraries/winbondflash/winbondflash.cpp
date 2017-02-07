@@ -368,7 +368,7 @@ bool winbondFlashSPI::begin(partNumber _partno,SPIClass &_spi,uint8_t _nss)
 void winbondFlashSPI::end()
 {
   winbondFlashClass::end();
-  SPI.end();
+  spi.end();
 }
 
 
