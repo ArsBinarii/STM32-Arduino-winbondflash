@@ -1,0 +1,51 @@
+#######################################
+# Syntax Coloring Map For Test
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+winbondFlashSPI	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+read	      KEYWORD2
+writePage	  KEYWORD2
+eraseSector	  KEYWORD2
+erase32kBlock KEYWORD2
+erase64kBlock KEYWORD2
+eraseAll	  KEYWORD2
+eraseSuspend  KEYWORD2
+eraseResume   KEYWORD2
+busy		  KEYWORD2
+readManufacturer  KEYWORD2
+readPartID  	  KEYWORD2
+readUniqueID  	  KEYWORD2
+readSR			  KEYWORD2
+begin		KEYWORD2
+end  		KEYWORD2
+bytes		KEYWORD2
+pages		KEYWORD2
+sectors		KEYWORD2
+blocks		KEYWORD2
+setWriteEnable KEYWORD2
+WE 			   KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+_W25Q80		LITERAL1
+_W25Q16		LITERAL1
+_W25Q32		LITERAL1
+_W25Q64		LITERAL1
+_W25Q128	LITERAL1
+
+
