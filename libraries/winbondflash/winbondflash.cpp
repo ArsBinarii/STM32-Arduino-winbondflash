@@ -56,7 +56,7 @@ static const pnListType pnList[] PROGMEM = {
     { winbondFlashClass::W25Q16, 0x4015,2097152, 8192, 512, 32  },
     { winbondFlashClass::W25Q32, 0x4016,4194304, 16384,1024,64  },
     { winbondFlashClass::W25Q64, 0x4017,8388608, 32768,2048,128 },
-    { winbondFlashClass::W25Q128,0x4018,16777216,65536,4096,256 }
+    { winbondFlashClass::W25Q128,0x4018,16777216,65535,4096,256 }
 };
   
 uint16_t winbondFlashClass::readSR()
@@ -130,11 +130,13 @@ bool winbondFlashClass::checkPartNo(partNumber _partno)
   id |= transfer(0x00);
   deselect();
 
-//  Serial.print("MANUF=0x");
-//  Serial.print(manuf,HEX);
-//  Serial.print(",ID=0x");
-//  Serial.print(id,HEX);
-//  Serial.println();
+  /*
+  Serial.print("MANUF=0x");
+  Serial.print(manuf,HEX);
+  Serial.print(",ID=0x");
+  Serial.print(id,HEX);
+  Serial.println();
+  */
   
   if(manuf != WINBOND_MANUF)
     return false;
@@ -253,8 +255,7 @@ bool winbondFlashClass::begin(partNumber _partno)
     delayMicroseconds(5);//>3us
     //  Serial.println("Chip Released");
 
-    if(!checkPartNo(_partno))
-        return false;
+    return checkPartNo(_partno);
 }
 
 void winbondFlashClass::end()
@@ -282,6 +283,17 @@ uint16_t winbondFlashClass::read (uint32_t addr,uint8_t *buf,uint16_t n)
   deselect();
   
   return n;
+}
+
+void winbondFlashClass::writebyte(uint32_t addr_start,uint8_t *buf)
+{
+  select();
+  transfer(PAGE_PGM);
+  transfer(addr_start>>16);
+  transfer(addr_start>>8);
+  transfer(addr_start);
+  transfer(buf[0]);
+  deselect();
 }
 
 void winbondFlashClass::writePage(uint32_t addr_start,uint8_t *buf)
@@ -358,7 +370,11 @@ bool winbondFlashSPI::begin(partNumber _partno,SPIClass &_spi,uint8_t _nss)
     // pinMode(MISO,INPUT_PULLUP);
     _spi.begin();
     _spi.setBitOrder(MSBFIRST);
-    _spi.setClockDivider(SPI_CLOCK_DIV2);
+    #if defined(_VARIANT_ARDUINO_STM32_) || defined(ARDUINO_ARCH_STM32)
+      _spi.setClockDivider(SPI_CLOCK_DIV16);
+    #else
+      _spi.setClockDivider(SPI_CLOCK_DIV2);
+    #endif
     _spi.setDataMode(SPI_MODE0);
     deselect();
 

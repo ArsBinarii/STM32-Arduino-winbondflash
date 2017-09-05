@@ -14,6 +14,7 @@
 //W25Q64 = 256_bytes_per_page * 16_pages_per_sector * 16_sectors_per_block * 128_blocks_per_chip
 //= 256b*16*16*128 = 8Mbyte = 64MBits
 
+#define _custom  winbondFlashClass::custom
 #define _W25Q80  winbondFlashClass::W25Q80
 #define _W25Q16  winbondFlashClass::W25Q16
 #define _W25Q32  winbondFlashClass::W25Q32
@@ -46,6 +47,7 @@ public:
   inline void WE(bool cmd = true) {setWriteEnable(cmd);}
   
   //WE() every time before write or erase
+  void writebyte(uint32_t addr_start,uint8_t *buf);//addr is 8bit-aligned, 0x00ffff00
   void writePage(uint32_t addr_start,uint8_t *buf);//addr is 8bit-aligned, 0x00ffff00
   //write a page, sizeof(buf) is 256 bytes
   void eraseSector(uint32_t addr);//addr is 12bit-aligned, 0x00fff000
@@ -96,7 +98,15 @@ private:
   }
 
 public:
-  winbondFlashSPI() : spi(1) {}
+  #if defined(ARDUINO_BLACK_F407VE) || defined(STM32F407VE)
+    winbondFlashSPI() : spi(SPI3) {}
+  #elif defined(MCU_STM32F406VG) || defined(BOARD_generic_f407v) //libmaple core
+    winbondFlashSPI() : spi(3) {}
+  #elif defined(MCU_STM32F103C8) || defined(MCU_STM32F103CB) || defined(MCU_STM32F103RB) //libmaple core
+    winbondFlashSPI() : spi(2) {}
+  #else
+    winbondFlashSPI() : spi(2) {}
+  #endif
   bool begin(partNumber _partno = autoDetect,SPIClass &_spi = SPI,uint8_t _nss = SS);
   void end();
 };
