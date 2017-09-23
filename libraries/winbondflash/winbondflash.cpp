@@ -285,14 +285,17 @@ uint16_t winbondFlashClass::read (uint32_t addr,uint8_t *buf,uint16_t n)
   return n;
 }
 
-void winbondFlashClass::writebyte(uint32_t addr_start,uint8_t *buf)
+void winbondFlashClass::writebyte(uint32_t addr_start,uint8_t *buf, uint16_t n)
 {
   select();
   transfer(PAGE_PGM);
   transfer(addr_start>>16);
   transfer(addr_start>>8);
   transfer(addr_start);
-  transfer(buf[0]);
+  for(uint16_t i=0;i<n;i++)
+  {
+    transfer(buf[i]);
+  }
   deselect();
 }
 
