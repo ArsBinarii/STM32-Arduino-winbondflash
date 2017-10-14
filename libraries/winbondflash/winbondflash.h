@@ -47,7 +47,7 @@ public:
   inline void WE(bool cmd = true) {setWriteEnable(cmd);}
   
   //WE() every time before write or erase
-  void writebyte(uint32_t addr_start,uint8_t *buf, uint16_t n);//addr is 8bit-aligned, 0x00ffff00
+  void writebyte(uint32_t addr_start,uint8_t *buf, uint16_t n=1);//addr is 8bit-aligned, 0x00ffff00
   void writePage(uint32_t addr_start,uint8_t *buf);//addr is 8bit-aligned, 0x00ffff00
   //write a page, sizeof(buf) is 256 bytes
   void eraseSector(uint32_t addr);//addr is 12bit-aligned, 0x00fff000
